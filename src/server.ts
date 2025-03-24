@@ -1,27 +1,3 @@
-// import express, { Request, Response } from 'express';
-// import dotenv from 'dotenv';
-// import cors from "cors";
-
-// dotenv.config();
-// const app = express();
-// const PORT = process.env.PORT || 3000;
-
-// app.use(express.json());
-
-// app.use(
-//   cors({
-//     origin: ["http://localhost:5173", "https://your-netlify-app.netlify.app"],
-//     credentials: true,
-//   })
-// );
-
-// app.get('/', (req: Request, res: Response) => {
-//   res.send('Hello from Butterfly Server!');
-// });
-
-// app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
@@ -66,12 +42,12 @@ app.get('/', (_req: Request, res: Response) => {
   res.send('Welcome to the server!');
 });
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(process.cwd(), 'dist')));
-  app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-  });
-}
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(process.cwd(), 'dist')));
+//   app.get('*', (req: Request, res: Response) => {
+//     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+//   });
+// }
 
 app.get('/api/data', (req: Request, res: Response) => {
   res.json({ message: 'Hello from the backend!' });

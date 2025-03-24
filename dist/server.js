@@ -22,7 +22,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const userRoutes_1 = __importDefault(require("../routes/userRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const node_path_1 = __importDefault(require("node:path"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
