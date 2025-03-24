@@ -24,7 +24,7 @@
 
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import userRoutes from '../routes/userRoutes';
+import userRoutes from './routes/userRoutes';
 import path from 'node:path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
