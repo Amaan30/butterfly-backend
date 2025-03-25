@@ -14,7 +14,6 @@ if (!jwtSecret) {
   throw new Error('JWT_SECRET is not defined in environment variables');
 }
 
-// Create a new user
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, email, password, name } = req.body;
@@ -96,11 +95,25 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
 
 export const logoutUser = (req: Request, res: Response): void => {
   res.clearCookie('token').status(200).json({
     success: true,
     message: 'User logged out successfully'
   });
+};
+
+export const getUserData = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };

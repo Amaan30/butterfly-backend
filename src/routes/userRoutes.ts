@@ -1,6 +1,6 @@
 // backend/routes/userRoutes.ts
 import express, {Response} from 'express';
-import { createUser, loginUser, logoutUser } from '../controllers/userController.js';
+import { createUser, getUserData, loginUser, logoutUser } from '../controllers/userController.js';
 import { authMiddleware, AuthRequest } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -22,6 +22,8 @@ router.get('/verify', authMiddleware, (req: AuthRequest, res: Response) => {
     user: req.user
   });
 });
+
+router.get('/:id', authMiddleware, getUserData)
 
 router.post('/logout', logoutUser);
 
