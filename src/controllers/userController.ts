@@ -83,7 +83,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       sameSite: 'none',
       path: '/',
       maxAge: 24*60*60*1000 //24hrs in milliseconds
-    }).status(200).json({ 
+    });
+
+    console.log("🔍 Cookies just before response:", res.getHeaders()["set-cookie"]);
+    
+    res.status(200).json({ 
       success: true, 
       message: 'User login successfully', 
       user, 
