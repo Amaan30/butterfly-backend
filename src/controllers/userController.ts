@@ -74,6 +74,9 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       { expiresIn: '24h'}
     );
 
+    console.log("✅ Generated Token:", token);
+    console.log("✅ Setting Cookie for:", user.username);
+
     res.cookie('token', token, {
       httpOnly: true,
       secure: true,
