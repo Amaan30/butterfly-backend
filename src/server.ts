@@ -42,12 +42,6 @@ app.get('/', (_req: Request, res: Response) => {
   res.send('Welcome to the server!');
 });
 
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(process.cwd(), 'dist')));
-//   app.get('*', (req: Request, res: Response) => {
-//     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-//   });
-// }
 
 app.get('/api/data', (req: Request, res: Response) => {
   res.json({ message: 'Hello from the backend!' });

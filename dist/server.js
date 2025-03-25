@@ -36,12 +36,6 @@ app.use('/api/users', userRoutes_1.default);
 app.get('/', (_req, res) => {
     res.send('Welcome to the server!');
 });
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(process.cwd(), 'dist')));
-//   app.get('*', (req: Request, res: Response) => {
-//     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-//   });
-// }
 app.get('/api/data', (req, res) => {
     res.json({ message: 'Hello from the backend!' });
 });
