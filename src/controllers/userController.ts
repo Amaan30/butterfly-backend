@@ -58,7 +58,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({username});
+    const user = await User.findOne({username}).select("-password");
     if(!user){
       res.status(410).json({message: 'Username not found'});
       return;
@@ -83,12 +83,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }).status(200).json({ 
       success: true, 
       message: 'User login successfully', 
-      user: {
-        id: user._id, 
-        username: user.username, 
-        name: user.name, 
-        email: user.email,
-      }, 
+      user, 
       token 
     });
   }catch (error) {
