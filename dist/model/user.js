@@ -39,7 +39,11 @@ const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    profilePicture: { type: String },
+    bio: { type: String },
+    followers: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "User" }], // ✅ Reference to other users
+    following: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "User" }], // ✅ Reference to other users
 });
-const user = mongoose_1.default.model('User', userSchema);
-exports.default = user;
+const User = mongoose_1.default.model('User', userSchema);
+exports.default = User;

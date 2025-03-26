@@ -1,6 +1,6 @@
 // backend/controllers/userController.ts
 import { Request, Response } from 'express';
-import User from '../model/user.js';
+import User, {IUser} from '../model/user.js';
 
 //import jwt
 import jwt from 'jsonwebtoken';
@@ -42,12 +42,12 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
     //add an env for secret key here
     const token = jwt.sign(
-      {id: user._id, username: username}, jwtSecret,
+      {_id: user._id}, jwtSecret,
       { expiresIn: '24h'}
     );
 
     // Respond with the created user
-    res.status(200).json({ message: 'User created successfully', user, token });
+    res.status(200).json({ success: true, message: 'User created successfully', user, token });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -58,7 +58,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({username}).select("-password");
+    const user = await User.findOne({username}).select("+password");
     if(!user){
       res.status(410).json({message: 'Username not found'});
       return;
@@ -70,7 +70,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     const token = jwt.sign(
-      {id: user._id, username: username, name: user.name, email: user.email}, jwtSecret,
+      {_id: user._id}, jwtSecret,
       { expiresIn: '24h'}
     );
 
@@ -83,11 +83,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       sameSite: 'none',
       path: '/',
       maxAge: 24*60*60*1000 //24hrs in milliseconds
-    });
-
-    console.log("🔍 Cookies just before response:", res.getHeaders()["set-cookie"]);
-    
-    res.status(200).json({ 
+    }).status(200).json({ 
       success: true, 
       message: 'User login successfully', 
       user, 

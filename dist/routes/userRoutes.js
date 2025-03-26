@@ -21,5 +21,6 @@ router.get('/verify', auth_js_1.authMiddleware, (req, res) => {
         user: req.user
     });
 });
+router.get('/:id', auth_js_1.authMiddleware, userController_js_1.getUserData);
 router.post('/logout', userController_js_1.logoutUser);
 exports.default = router;
