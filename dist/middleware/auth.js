@@ -7,6 +7,7 @@ exports.authMiddleware = void 0;
 //middleware/auth.ts
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const user_1 = __importDefault(require("../model/user"));
 dotenv_1.default.config();
 const jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret) {
@@ -24,9 +25,10 @@ const authMiddleware = async (req, res, next) => {
         //verify token validity
         const decoded = jsonwebtoken_1.default.verify(token, jwtSecret);
         // Check if the decoded token matches the User interface
-        const user = await User.findById(decoded._id).select("-password").lean();
+        const user = await user_1.default.findById(decoded._id).select("-password");
         if (!user) {
-            return res.status(401).json({ message: "User not found" });
+            res.status(401).json({ message: "User not found" });
+            return;
         }
         req.user = user; // ✅ Attach full Mongoose user document to request
         next();

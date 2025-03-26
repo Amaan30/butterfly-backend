@@ -35,9 +35,9 @@ const createUser = async (req, res) => {
         // Save the user to the database
         await user.save();
         //add an env for secret key here
-        const token = jsonwebtoken_1.default.sign({ id: user._id, username: username }, jwtSecret, { expiresIn: '24h' });
+        const token = jsonwebtoken_1.default.sign({ _id: user._id }, jwtSecret, { expiresIn: '24h' });
         // Respond with the created user
-        res.status(200).json({ message: 'User created successfully', user, token });
+        res.status(200).json({ success: true, message: 'User created successfully', user, token });
     }
     catch (error) {
         console.error('Error creating user:', error);
@@ -48,7 +48,7 @@ exports.createUser = createUser;
 const loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await user_js_1.default.findOne({ username }).select("-password");
+        const user = await user_js_1.default.findOne({ username }).select("+password");
         if (!user) {
             res.status(410).json({ message: 'Username not found' });
             return;
@@ -58,7 +58,7 @@ const loginUser = async (req, res) => {
             res.status(411).json({ message: 'Incorrect password' });
             return;
         }
-        const token = jsonwebtoken_1.default.sign({ _id: user._id, username: username, name: user.name, email: user.email }, jwtSecret, { expiresIn: '24h' });
+        const token = jsonwebtoken_1.default.sign({ _id: user._id }, jwtSecret, { expiresIn: '24h' });
         console.log("✅ Generated Token:", token);
         console.log("✅ Setting Cookie for:", user.username);
         res.cookie('token', token, {
@@ -67,9 +67,7 @@ const loginUser = async (req, res) => {
             sameSite: 'none',
             path: '/',
             maxAge: 24 * 60 * 60 * 1000 //24hrs in milliseconds
-        });
-        console.log("🔍 Cookies just before response:", res.getHeaders()["set-cookie"]);
-        res.status(200).json({
+        }).status(200).json({
             success: true,
             message: 'User login successfully',
             user,

@@ -40,15 +40,17 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
                 const decoded = jwt.verify(token, jwtSecret) as {_id: "string"};
 
 
-                // Check if the decoded token matches the User interface
-                const user = await User.findById(decoded._id).select("-password");
-
+                // Only check for _id or id
+                // Fetch the full user document
+                const user = await User.findById(decoded._id).select('-password');
+                
                 if (!user) {
-                res.status(401).json({ message: "User not found" });
+                res.status(401).json({ message: 'User not found' });
                 return;
                 }
 
-                req.user = user; // ✅ Attach full Mongoose user document to request
+                // Attach full user document to request
+                req.user = user;
 
                 next();
         } catch(err){
