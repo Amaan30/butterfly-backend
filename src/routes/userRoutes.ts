@@ -1,6 +1,6 @@
 // backend/routes/userRoutes.ts
 import express, {Response} from 'express';
-import { createUser, getUserData, loginUser, logoutUser } from '../controllers/userController';
+import { createUser, getUserData, getUserDataByUsername, loginUser, logoutUser } from '../controllers/userController';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 
 const router = express.Router();
@@ -26,5 +26,7 @@ router.get('/verify', authMiddleware, (req: AuthRequest, res: Response): void =>
 router.get('/:id', authMiddleware, getUserData)
 
 router.post('/logout', logoutUser);
+
+router.get('/:username', getUserDataByUsername);
 
 export default router;

@@ -120,3 +120,18 @@ export const getUserData = async (req: Request, res: Response): Promise<void> =>
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getUserDataByUsername = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({username}).select("-password");
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+}
