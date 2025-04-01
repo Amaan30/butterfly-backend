@@ -1,9 +1,24 @@
 // backend/routes/userRoutes.ts
 import express, {Response} from 'express';
-import { createUser, getUserDataByUsername, loginUser, logoutUser } from '../controllers/userController';
+import { createUser, getUserDataByUsername, loginUser, logoutUser, updateProfilePicture } from '../controllers/userController';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
+import multer from 'multer';
 
 const router = express.Router();
+
+// Multer setup for file upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Save files in an "uploads" folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+const upload = multer({ storage });
+
+// Profile picture upload route
+router.post('/upload-pfp', upload.single('profilePicture'), updateProfilePicture);
 
 // POST /api/users - Create a new user
 

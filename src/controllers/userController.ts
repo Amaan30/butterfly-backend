@@ -135,3 +135,21 @@ export const getUserDataByUsername = async (req: Request, res: Response): Promis
     res.status(500).json({ message: "Server error" });
   }
 }
+
+export const updateProfilePicture = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const filePath = `/uploads/${req.file.filename}`; // Store the path
+
+    // TODO: Save `filePath` to user's profile in the database (assuming MongoDB)
+    // Example: await User.findByIdAndUpdate(req.user.id, { profilePicture: filePath });
+
+    res.status(200).json({ profilePicture: filePath });
+  } catch (error) {
+    console.error('Error uploading profile picture:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
