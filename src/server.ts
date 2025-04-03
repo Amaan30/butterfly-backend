@@ -5,6 +5,7 @@ import path from 'node:path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -23,14 +24,11 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Create uploads directory if it doesn't exist
-import fs from 'fs';
-const uploadsDir = path.join(__dirname, '../uploads/profilePics');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// In src/server.ts
+const uploadsPath = path.resolve(process.cwd(), 'uploads');
+console.log(`Serving uploads from: ${uploadsPath}`);
+app.use('/uploads', express.static(uploadsPath));
 
 if (!process.env.MONGODB_URI) {
   console.error("MONGODB_URI is not defined in environment variables");

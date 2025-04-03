@@ -7,12 +7,25 @@ import multer from 'multer';
 const router = express.Router();
 
 // Multer setup for file upload
+import path from 'path';
+import fs from 'fs';
+
+// Create uploads directory with absolute path
+const uploadsDir = path.resolve(process.cwd(), 'uploads/profilePics');
+if (!fs.existsSync(uploadsDir)){
+    fs.mkdirSync(uploadsDir, { recursive: true });
+    console.log(`Created directory: ${uploadsDir}`);
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '../uploads/profilePics'); // Save files in an "uploads" folder
+    console.log(`Using uploads directory: ${uploadsDir}`);
+    cb(null, uploadsDir);
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    const filename = `${Date.now()}-${file.originalname}`;
+    console.log(`Generated filename: ${filename}`);
+    cb(null, filename);
   },
 });
 const upload = multer({ storage });
