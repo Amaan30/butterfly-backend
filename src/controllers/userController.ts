@@ -138,41 +138,31 @@ export const getUserDataByUsername = async (req: Request, res: Response): Promis
 
 export const updateProfilePicture = async (req: Request, res: Response) => {
   try {
+    console.log("Upload request received", req.file);
     if (!req.file) {
+      console.log("No file in request");
       res.status(400).json({ message: 'No file uploaded' });
       return;
     }
 
-    // Get user ID from authenticated request
-    const userId = (req as any).user?._id;
-    if (!userId) {
-      res.status(401).json({ message: 'User not authenticated' });
-      return;
-    }
-
     const filePath = `/uploads/profilePics/${req.file.filename}`;
-
+    console.log("File path:", filePath);
+    
+    // Assuming you're getting user ID from auth middleware
+    const userId = (req as any).user?._id;
+    console.log("User ID:", userId);
+    
+    // Update user in database
     const updatedUser = await User.findByIdAndUpdate(
-      userId,
+      userId, 
       { profilePicture: filePath },
       { new: true }
-    ).select('-password');
-
-    if (!updatedUser) {
-      res.status(404).json({ message: 'User not found' });
-      return;
-    }
-
-    res.status(200).json({ 
-      success: true,
-      message: 'Profile picture updated successfully',
-      user: updatedUser,
-      profilePicture: filePath 
-    });
-    return;
+    );
+    
+    console.log("Updated user:", updatedUser);
+    res.status(200).json({ success: true, profilePicture: filePath });
   } catch (error) {
-    console.error('Error uploading profile picture:', error);
-    res.status(500).json({ message: 'Server error' });
-    return;
+    console.error('Detailed error uploading profile picture:', error);
+    res.status(500).json({ message: 'Server error', error: String(error) });
   }
 };
