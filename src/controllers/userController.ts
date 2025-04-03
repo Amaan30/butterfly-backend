@@ -143,12 +143,32 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
       return;
     }
 
-    const filePath = `/uploads/profilePics/${req.file.filename}`; // Store the path
+    // Get user ID from authenticated request
+    const userId = (req as any).user?._id;
+    if (!userId) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+    }
 
-    // TODO: Save `filePath` to user's profile in the database (assuming MongoDB)
-    // Example: await User.findByIdAndUpdate(req.user.id, { profilePicture: filePath });
+    const filePath = `/uploads/profilePics/${req.file.filename}`;
 
-    res.status(200).json({ profilePicture: filePath });
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: filePath },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.status(200).json({ 
+      success: true,
+      message: 'Profile picture updated successfully',
+      user: updatedUser,
+      profilePicture: filePath 
+    });
     return;
   } catch (error) {
     console.error('Error uploading profile picture:', error);

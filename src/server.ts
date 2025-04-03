@@ -23,6 +23,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 if (!process.env.MONGODB_URI) {
   console.error("MONGODB_URI is not defined in environment variables");
