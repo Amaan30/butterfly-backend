@@ -25,6 +25,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Create uploads directory if it doesn't exist
+import fs from 'fs';
+const uploadsDir = path.join(__dirname, '../uploads/profilePics');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 if (!process.env.MONGODB_URI) {
   console.error("MONGODB_URI is not defined in environment variables");
   process.exit(1); // Exit if missing critical config
