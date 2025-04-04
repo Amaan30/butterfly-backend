@@ -206,6 +206,7 @@ export const addFollower = async (req: Request, res: Response): Promise<void> =>
       $addToSet: { followers: userId }
     });
     
+    res.status(200).json({ success: true, message: 'Follower added successfully' });
 
   } catch(error) {
     console.error('Error adding follower:', error);
