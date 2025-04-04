@@ -169,13 +169,13 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
 
 export const updateInfo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, email, name } = req.body;
+    const { username, bio, name } = req.body;
     const userId = (req as any).user?._id;
 
     // Update user in database
     const updatedUser = await User.findByIdAndUpdate(
       userId, 
-      { username, email, name },
+      { username, bio, name },
       { new: true, runValidators: true } // Ensure that the updated user is returned and validators are run
     );
     
