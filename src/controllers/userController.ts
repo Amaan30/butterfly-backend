@@ -186,3 +186,32 @@ export const updateInfo = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ message: 'Server error', error: String(error) });
   }
 };
+
+export const addFollower = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username } = req.params;
+    const userId = (req as any).user?._id;
+    const TargetId =  await User.findOne({username}).select("_id");
+    if(!TargetId){
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { following: TargetId }
+    });
+
+    await User.findByIdAndUpdate(TargetId, {
+      $addToSet: { followers: userId }
+    });
+    
+
+  } catch(error) {
+    console.error('Error adding follower:', error);
+    res.status(500).json({ message: 'Server error', error: String(error) });
+  }
+};
+
+export const removeFollower = async (req: Request, res: Response): Promise<void> => {};
+
+export const getFollowers = async (req: Request, res: Response): Promise<void> => {};
