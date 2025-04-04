@@ -189,6 +189,7 @@ export const updateInfo = async (req: Request, res: Response): Promise<void> => 
 
 export const addFollower = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log("flag", req.params, req.body);
     const { username } = req.params;
     const userId = (req as any).user?._id;
     const TargetId =  await User.findOne({username}).select("_id");
@@ -212,6 +213,10 @@ export const addFollower = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-export const removeFollower = async (req: Request, res: Response): Promise<void> => {};
+export const removeFollower = async (req: Request, res: Response): Promise<void> => {
+  console.log("flag", req.params, req.body);
+};
 
-export const getFollowers = async (req: Request, res: Response): Promise<void> => {};
+export const getFollowers = async (req: Request, res: Response): Promise<void> => {
+  console.log("flag", req.params, req.body);
+};
