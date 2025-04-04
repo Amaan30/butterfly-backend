@@ -176,7 +176,7 @@ export const updateInfo = async (req: Request, res: Response): Promise<void> => 
     const updatedUser = await User.findByIdAndUpdate(
       userId, 
       { username, email, name },
-      { new: true }
+      { new: true, runValidators: true } // Ensure that the updated user is returned and validators are run
     );
     
     console.log("Updated user:", updatedUser);
