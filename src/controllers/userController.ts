@@ -1,5 +1,5 @@
 // backend/controllers/userController.ts
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import User, {IUser} from '../model/user.js';
 
 //import jwt
@@ -163,6 +163,26 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
     res.status(200).json({ success: true, profilePicture: filePath });
   } catch (error) {
     console.error('Detailed error uploading profile picture:', error);
+    res.status(500).json({ message: 'Server error', error: String(error) });
+  }
+};
+
+export const updateInfo = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username, email, name } = req.body;
+    const userId = (req as any).user?._id;
+
+    // Update user in database
+    const updatedUser = await User.findByIdAndUpdate(
+      userId, 
+      { username, email, name },
+      { new: true }
+    );
+    
+    console.log("Updated user:", updatedUser);
+    res.status(200).json({ success: true, updatedUser });
+  } catch (error) {
+    console.error('Error updating user info:', error);
     res.status(500).json({ message: 'Server error', error: String(error) });
   }
 };
