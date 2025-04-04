@@ -218,7 +218,7 @@ export const removeFollower = async (req: Request, res: Response): Promise<void>
   try{
     const { username } = req.params;
     const userId = (req as any).user?._id;
-    const IdBeingUnfollowed = User.findOne({username}).select("_id");
+    const IdBeingUnfollowed = await User.findOne({username}).select("_id");
 
     await User.findByIdAndUpdate(userId, {
       $pull: { following: IdBeingUnfollowed }
