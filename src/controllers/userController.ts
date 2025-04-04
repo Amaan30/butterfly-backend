@@ -215,7 +215,25 @@ export const addFollower = async (req: Request, res: Response): Promise<void> =>
 };
 
 export const removeFollower = async (req: Request, res: Response): Promise<void> => {
-  console.log("flag", req.params, req.body);
+  try{
+    const { username } = req.params;
+    const userId = (req as any).user?._id;
+    const IdBeingUnfollowed = User.findOne({username}).select("_id");
+
+    await User.findByIdAndUpdate(userId, {
+      $pull: { following: IdBeingUnfollowed }
+    });
+
+    await User.findByIdAndUpdate(IdBeingUnfollowed, {
+      $pull: { followers: userId }
+    });
+
+    res.status(200).json({ success: true, message: 'Follower removed successfully' });
+
+  } catch(error) {
+    console.error('Error removing follower:', error);
+    res.status(500).json({ message: 'Server error', error: String(error) });
+  }
 };
 
 export const getFollowers = async (req: Request, res: Response): Promise<void> => {
