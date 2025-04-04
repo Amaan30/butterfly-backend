@@ -18,7 +18,7 @@ const userSchema: Schema<IUser> = new Schema({
         username: {type: String, required: true, unique: true},
         password: {type: String, required: true},
         profilePicture: {type: String, default: "/images/Default-pfp.jpg"},
-        bio: {type: String},
+        bio: {type: String, default: "Available"},
         followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // ✅ Reference to other users
         following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // ✅ Reference to other users
 });
