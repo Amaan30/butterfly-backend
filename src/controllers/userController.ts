@@ -192,17 +192,17 @@ export const addFollower = async (req: Request, res: Response): Promise<void> =>
     console.log("flag", req.params, req.body);
     const { username } = req.params;
     const userId = (req as any).user?._id;
-    const TargetId =  await User.findOne({username}).select("_id");
+    const TargetId =  await User.findOne({username}).select("_id").lean();
     if(!TargetId){
       res.status(404).json({ message: "User not found" });
       return;
     }
 
     await User.findByIdAndUpdate(userId, {
-      $addToSet: { following: TargetId }
+      $addToSet: { following: TargetId._id }
     });
 
-    await User.findByIdAndUpdate(TargetId, {
+    await User.findByIdAndUpdate(TargetId._id, {
       $addToSet: { followers: userId }
     });
     
@@ -218,13 +218,13 @@ export const removeFollower = async (req: Request, res: Response): Promise<void>
   try{
     const { username } = req.params;
     const userId = (req as any).user?._id;
-    const IdBeingUnfollowed = await User.findOne({username}).select("_id");
+    const IdBeingUnfollowed = await User.findOne({username}).select("_id").lean();
 
     await User.findByIdAndUpdate(userId, {
-      $pull: { following: IdBeingUnfollowed }
+      $pull: { following: IdBeingUnfollowed?._id }
     });
 
-    await User.findByIdAndUpdate(IdBeingUnfollowed, {
+    await User.findByIdAndUpdate(IdBeingUnfollowed?._id, {
       $pull: { followers: userId }
     });
 
@@ -239,3 +239,7 @@ export const removeFollower = async (req: Request, res: Response): Promise<void>
 export const getFollowers = async (req: Request, res: Response): Promise<void> => {
   console.log("flag", req.params, req.body);
 };
+
+export const getFollowing = async (req: Request, res: Response): Promise<void> => {
+  console.log("flag", req.params, req.body);
+}
