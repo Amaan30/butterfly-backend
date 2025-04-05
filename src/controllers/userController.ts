@@ -124,17 +124,23 @@ export const logoutUser = (req: Request, res: Response): void => {
 export const getUserDataByUsername = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username } = req.params;
-    const user = await User.findOne({username}).select("-password");
+
+    // Fetch user and only include fields you need
+    const user = await User.findOne({ username })
+      .select("-password -email -__v -createdAt -updatedAt")
+      .lean(); // lean to make it a plain JS object (faster, lighter)
+
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    res.json(user);
+    res.status(200).json(user); // user.followers and user.following are arrays of IDs
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
-}
+};
+
 
 export const updateProfilePicture = async (req: Request, res: Response) => {
   try {
@@ -235,11 +241,3 @@ export const removeFollower = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: 'Server error', error: String(error) });
   }
 };
-
-export const getFollowers = async (req: Request, res: Response): Promise<void> => {
-  console.log("flag", req.params, req.body);
-};
-
-export const getFollowing = async (req: Request, res: Response): Promise<void> => {
-  console.log("flag", req.params, req.body);
-}
