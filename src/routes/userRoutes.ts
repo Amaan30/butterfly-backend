@@ -63,6 +63,6 @@ router.post('/follow/:username', authMiddleware, addFollower);
 
 router.delete('/unfollow/:username', authMiddleware, removeFollower);
 
-router.get('/getfollowers/:username', authMiddleware, getFollowingInfo);
+router.get('/getfollowing/:username', authMiddleware, getFollowingInfo);
 
 export default router;
