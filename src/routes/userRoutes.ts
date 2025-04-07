@@ -1,6 +1,6 @@
 // backend/routes/userRoutes.ts
 import express, {Response} from 'express';
-import { addFollower, createUser, getUserDataByUsername, loginUser, logoutUser, removeFollower, updateInfo, updateProfilePicture } from '../controllers/userController';
+import { addFollower, createUser, getFollowingInfo, getUserDataByUsername, loginUser, logoutUser, removeFollower, updateInfo, updateProfilePicture } from '../controllers/userController';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import multer from 'multer';
 
@@ -62,5 +62,7 @@ router.put('/edit-profile', authMiddleware, updateInfo);
 router.post('/follow/:username', authMiddleware, addFollower);
 
 router.delete('/unfollow/:username', authMiddleware, removeFollower);
+
+router.get('/getfollowers/:username', authMiddleware, getFollowingInfo);
 
 export default router;

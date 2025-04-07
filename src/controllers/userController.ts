@@ -241,3 +241,22 @@ export const removeFollower = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: 'Server error', error: String(error) });
   }
 };
+
+export const getFollowingInfo = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { username } = req.params;
+    const userId = (req as any).user?._id;
+
+    const user = await User.findOne({username}).select("followers following").populate("followers following", "username profilePicture").lean();
+
+    if(!user){
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch(error) {
+    console.error('Error fetching following info:', error);
+    res.status(500).json({ message: 'Server error', error: String(error) });
+  }
+};
