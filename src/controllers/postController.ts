@@ -7,6 +7,7 @@ import { Response } from 'express';
 
 export const createPost = async (req: AuthRequest, res: Response) => {
   try {
+
     const { title, content } = req.body;
 
     if (!req.user?._id) {
@@ -23,6 +24,14 @@ export const createPost = async (req: AuthRequest, res: Response) => {
     });
 
     const saved = await newPost.save();
+    if (saved) {
+      await User.findByIdAndUpdate(
+        req.user._id,
+        { $push: { posts: saved._id } },
+        { new: true }
+      );
+      return;
+    }
     res.status(201).json(saved);
     return;
   } catch (err) {
