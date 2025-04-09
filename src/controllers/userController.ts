@@ -151,7 +151,7 @@ export const updateProfilePicture = async (req: Request, res: Response) => {
       return;
     }
 
-    const filePath = `/uploads/profilePics/${req.file.filename}`;
+    const filePath = req.file.path; // Assuming you're using multer and the file path is stored in req.file.path
     console.log("File path:", filePath);
     
     // Assuming you're getting user ID from auth middleware

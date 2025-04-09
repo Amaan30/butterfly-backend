@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
+import postRoutes from './routes/postRoutes';
 import path from 'node:path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -43,6 +44,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('Welcome to the server!');

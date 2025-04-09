@@ -3,6 +3,7 @@ import express, {Response} from 'express';
 import { addFollower, createUser, getFollowingInfo, getUserDataByUsername, loginUser, logoutUser, removeFollower, updateInfo, updateProfilePicture } from '../controllers/userController';
 import { authMiddleware, AuthRequest } from '../middleware/auth';
 import multer from 'multer';
+import { upload } from '../utils/uploads';
 
 const router = express.Router();
 
@@ -11,24 +12,24 @@ import path from 'path';
 import fs from 'fs';
 
 // Create uploads directory with absolute path
-const uploadsDir = path.resolve(process.cwd(), 'uploads/profilePics');
-if (!fs.existsSync(uploadsDir)){
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    console.log(`Created directory: ${uploadsDir}`);
-}
+// const uploadsDir = path.resolve(process.cwd(), 'uploads/profilePics');
+// if (!fs.existsSync(uploadsDir)){
+//     fs.mkdirSync(uploadsDir, { recursive: true });
+//     console.log(`Created directory: ${uploadsDir}`);
+// }
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    console.log(`Using uploads directory: ${uploadsDir}`);
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const filename = `${Date.now()}-${file.originalname}`;
-    console.log(`Generated filename: ${filename}`);
-    cb(null, filename);
-  },
-});
-const upload = multer({ storage });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     console.log(`Using uploads directory: ${uploadsDir}`);
+//     cb(null, uploadsDir);
+//   },
+//   filename: (req, file, cb) => {
+//     const filename = `${Date.now()}-${file.originalname}`;
+//     console.log(`Generated filename: ${filename}`);
+//     cb(null, filename);
+//   },
+// });
+// const upload = multer({ storage });
 
 // Update the route to use authentication middleware
 router.post('/upload-pfp', authMiddleware, upload.single('profilePicture'), updateProfilePicture);

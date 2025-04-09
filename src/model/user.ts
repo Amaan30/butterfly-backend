@@ -10,6 +10,7 @@ export interface IUser extends Document {
         bio?: string;
         followers?: Types.ObjectId[]; // ✅ Array of user IDs
         following?: Types.ObjectId[]; // ✅ Array of user IDs
+        posts?: Types.ObjectId[]; // ✅ Array of post IDs
 }
 
 const userSchema: Schema<IUser> = new Schema({
@@ -21,6 +22,7 @@ const userSchema: Schema<IUser> = new Schema({
         bio: {type: String, default: "Available"},
         followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // ✅ Reference to other users
         following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // ✅ Reference to other users
+        posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }], // Reference to posts
 });
 
 const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
