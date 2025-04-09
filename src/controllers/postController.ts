@@ -30,7 +30,6 @@ export const createPost = async (req: AuthRequest, res: Response) => {
         { $push: { posts: saved._id } },
         { new: true }
       );
-      return;
     }
     res.status(201).json(saved);
     return;
