@@ -42,7 +42,7 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 
 export const getUserPosts = async (req: AuthRequest, res: Response) => {
   try {
-    const username = req.params;
+    const {username} = req.params;
     const user = await User.findOne({ username }).populate('posts');
     if (!user) {
       res.status(404).json({ message: 'User not found' });
