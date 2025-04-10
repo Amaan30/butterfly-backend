@@ -59,14 +59,18 @@ export const getFeed = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?._id;
     const user = await User.findById(userId);
+    const { page = 1, limit = 5 } = req.query;
+
     if (!user) {
       res.status(404).json({ message: 'User not found' });
       return;
     }
 
     const posts = await Post.find({ author: { $in: user.following } })
-      .populate('author', 'username profilePicture')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
+      .populate('author', 'username profilePicture');
 
     res.status(200).json(posts);
   } catch (err) {
