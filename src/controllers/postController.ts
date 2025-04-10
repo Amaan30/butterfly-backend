@@ -74,3 +74,37 @@ export const getFeed = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+export const toggleLike = async (req: AuthRequest, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const userId = req.user?._id;
+
+    if (!userId) {
+      res.status(401).json({ message: 'Unauthorized: No user found in request' });
+      return;
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      res.status(404).json({ message: 'Post not found' });
+      return;
+    }
+
+    if (!post.likes) {
+      post.likes = []; // Initialize likes array if it doesn't exist
+    }
+
+    if (post.likes.includes(userId)) {
+      post.likes = post.likes.filter((like) => like.toString() !== userId.toString());
+    } else {
+      post.likes.push(userId);
+    }
+
+    await post.save();
+    res.status(200).json({ success: true, likesCount: post.likes.length });
+  } catch (err) {
+    console.error('Error toggling like:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
