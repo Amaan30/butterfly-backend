@@ -58,18 +58,16 @@ export const getUserPosts = async (req: AuthRequest, res: Response) => {
 export const getFeed = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?._id;
-    if (!userId) {
-      res.status(401).json({ message: 'Unauthorized: No user found in request' });
-      return;
-    }
-
-    const user = await User.findById(userId).populate('following', 'posts');
+    const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({ message: 'User not found' });
       return;
     }
 
-    const posts = await Post.find({ author: { $in: user.following } }).populate('author', 'username profilePicture').sort({ createdAt: -1 });
+    const posts = await Post.find({ author: { $in: user.following } })
+      .populate('author', 'username profilePicture')
+      .sort({ createdAt: -1 });
+
     res.status(200).json(posts);
   } catch (err) {
     console.error('Error fetching feed:', err);
