@@ -8,8 +8,8 @@ const router = express.Router();
 
 router.post('/', authMiddleware, upload.single('media'), createPost);
 
-router.get('/:username', authMiddleware, getUserPosts);
-
 router.get('/feed', authMiddleware, getFeed);
+
+router.get('/:username', authMiddleware, getUserPosts);
 
 export default router;

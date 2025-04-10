@@ -56,14 +56,15 @@ router.get('/verify', authMiddleware, (req: AuthRequest, res: Response): void =>
 
 router.post('/logout', logoutUser);
 
-router.get('/:username', getUserDataByUsername);
-
 router.put('/edit-profile', authMiddleware, updateInfo);
+
+
+router.get('/getfollowing/:username', authMiddleware, getFollowingInfo);
 
 router.post('/follow/:username', authMiddleware, addFollower);
 
 router.delete('/unfollow/:username', authMiddleware, removeFollower);
 
-router.get('/getfollowing/:username', authMiddleware, getFollowingInfo);
+router.get('/:username', getUserDataByUsername);
 
 export default router;
