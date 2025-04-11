@@ -42,18 +42,30 @@ export const createPost = async (req: AuthRequest, res: Response) => {
 
 export const getUserPosts = async (req: AuthRequest, res: Response) => {
   try {
-    const {username} = req.params;
-    const user = await User.findOne({ username }).populate('posts');
+    const { username } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 6;
+    const skip = (page - 1) * limit;
+
+    const user = await User.findOne({ username });
     if (!user) {
       res.status(404).json({ message: 'User not found' });
       return;
     }
-    res.status(200).json(user.posts);
+
+    const totalPosts = await Post.countDocuments({ author: user._id });
+    const posts = await Post.find({ author: user._id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({ posts, totalPosts });
   } catch (err) {
     console.error('Error fetching user posts:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 export const getFeed = async (req: AuthRequest, res: Response) => {
   try {
