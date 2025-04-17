@@ -93,6 +93,6 @@ app.get('/api/data', (req: Request, res: Response) => {
   res.json({ message: 'Hello from the backend!' });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
