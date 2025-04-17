@@ -6,7 +6,11 @@ import path from 'node:path';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import fs from 'fs';
+
+import { Server } from 'socket.io';
+import http from 'http';
+import messageRoutes from './routes/messageRoutes';
+import { Message } from './model/message';
 
 dotenv.config();
 
@@ -43,8 +47,42 @@ mongoose
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.log(err));
 
+//chat function from here
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [
+      'http://localhost:5173',                        // Development
+      'https://gleaming-strudel-07579f.netlify.app'
+    ],
+    credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  socket.on("send-message", async (message) => {
+    const { sender, receiver, content } = message;
+    const newMessage = await new Message({ sender, receiver, content }).save();
+    io.to(receiver).emit("receive-message", newMessage); // Emit to the receiver
+    socket.broadcast.emit('receive-message', message); // you can limit to a room
+  });
+
+  socket.on("join-room", (userId) => {
+    socket.join(userId); // Users join a room with their ID
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/messages', messageRoutes);
+
 
 app.get('/', (_req: Request, res: Response) => {
   res.send('Welcome to the server!');
